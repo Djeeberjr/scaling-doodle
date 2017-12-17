@@ -14,8 +14,20 @@ public class Game {
     }
 
     //Getter & Setter
+    public int posToIndex(int x, int y) {
+        return x + sizeX * y;
+    }
+
     public Fraction getFieldPos(int x, int y){
-        return field[x + sizeX * y];
+        return field[posToIndex(x, y)];
+    }
+
+    public Player getPlayerAt(int x, int y) {
+        for(Player p : players) {
+            if(p.x == x && p.y == y)
+                return p;
+        }
+        return null;
     }
 
     public int getWinner() {

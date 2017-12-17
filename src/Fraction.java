@@ -103,6 +103,27 @@ public class Fraction extends Number implements Comparable<Fraction> {
         return new Fraction(this.numerator.multiply(r.denominator), this.denominator.multiply(r.numerator));
     }
 
+    boolean isInteger() {
+        return (this.denominator.equals(BigInteger.ONE));
+    }
+
+    public Fraction extend(BigInteger foo) {
+        return new Fraction(numerator.multiply(foo), denominator.multiply(foo));
+    }
+
+    public boolean isNaN() {
+        return denominator.equals(BigInteger.ZERO);
+    }
+
+    BigInteger getNumerator() {
+        return numerator;
+    }
+
+    BigInteger getDenominator() {
+        return denominator;
+    }
+
+
     @Override
     public String toString() {
         if(isInteger()){
@@ -111,10 +132,6 @@ public class Fraction extends Number implements Comparable<Fraction> {
             return isNaN() ? "NaN" : numerator + "/" + denominator;
         }
 
-    }
-
-    boolean isInteger() {
-        return (this.denominator.equals(BigInteger.ONE));
     }
 
     @Override
@@ -140,13 +157,6 @@ public class Fraction extends Number implements Comparable<Fraction> {
         return numerator.hashCode()+denominator.hashCode();
     }
 
-    public Fraction extend(BigInteger foo) {
-        return new Fraction(numerator.multiply(foo), denominator.multiply(foo));
-    }
-
-    public boolean isNaN() {
-        return denominator.equals(BigInteger.ZERO);
-    }
 
     private BigInteger ggt(BigInteger a, BigInteger b) {
         if(b.compareTo(BigInteger.ZERO) == 0)
@@ -154,5 +164,4 @@ public class Fraction extends Number implements Comparable<Fraction> {
         BigInteger mod = a.mod(b);
         return mod.equals(BigInteger.ZERO) ? b : ggt(b, mod);
     }
-
 }
