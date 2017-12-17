@@ -2,9 +2,9 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Game game = new Game();
+        Game game = new Game(8, 8);
 
-        while(true){
+        while(true) {
             Output.draw(game);
             char input = Input.getInput();
 
