@@ -1,5 +1,5 @@
 public class Game {
-    private final int sizeX,sizeY;
+    private  int sizeX,sizeY;
     private int turn;
     private Player[] players;
     private Fraction[] field;
