@@ -1,11 +1,26 @@
-public class Main {
-    public static void main(String[] args) {
-        //Game erstellen
+import java.io.IOException;
 
-        //loop
-            // has winner
-            //draw field
-            //input
-            //Proc input
+public class Main {
+    public static void main(String[] args) throws IOException {
+        Game game = new Game();
+
+        while(true){
+            Output.draw(game);
+            char input = Input.getInput();
+
+            if(input == 'c'){
+                System.out.println("Good Bye");
+                break;
+            }
+
+            game.processInput(Input.getMove(input));
+
+            if(game.getWinner() > 0){
+                Output.draw(game);
+                System.out.println("We have a winner!");
+                break;
+            }
+        }
+
     }
 }
