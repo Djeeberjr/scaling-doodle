@@ -1,3 +1,6 @@
+/**
+ * Represents a player in the game
+ */
 public class Player {
     public int x;
     public int y;
@@ -8,5 +11,9 @@ public class Player {
         this.x = x;
         this.y = y;
         this.name = name;
+    }
+
+    public String getFigure() {
+        return String.format("%c%c", name, name);
     }
 }

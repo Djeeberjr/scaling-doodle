@@ -1,14 +1,17 @@
 import java.io.IOException;
 
-//Henri
+/**
+ * Handles console output and makes the game look great
+ */
 public class Output {
-    private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
-    public static void draw(Game game){
+    public static void draw(Game game) throws InterruptedException {
         final int height = game.getSizeY();
         final int width = game.getSizeX();
 
         clearScreen();
+        drawGridTop(width);
         drawMatrixTop(width);
         for(int y = 0; y < height; y++) {
             drawLineTop(game, y);
@@ -18,14 +21,32 @@ public class Output {
                 drawMatrixLineSep(width);
         }
         drawMatrixBottom(width);
+        System.out.println();
+
+        drawLastEvent(game);
+        drawCurrentPlayer(game);
 
         // make sure that everything has been written out before returning
         System.out.flush();
     }
 
+    private static void drawGridTop(int numFracsPerLine) {
+        // draw matrix top left corner
+        System.out.print("         ");
+        drawFracSep();
+
+        // padding
+        for (int i = 0; i < numFracsPerLine; i++) {
+            System.out.print(String.format("%2d", i+1));
+            drawFracSep();
+        }
+
+        System.out.println();
+    }
+
     private static void drawMatrixTop(int numFracsPerLine) {
         // draw matrix top left corner
-        System.out.print("┌");
+        System.out.print("        ┌");
         drawFracSep();
 
         // padding
@@ -41,7 +62,7 @@ public class Output {
 
     private static void drawLineTop(Game game, int lineY) {
         // draw left matrix wall
-        System.out.print("│");
+        drawMatrixLeftWall(0);
         drawFracSep();
 
         // draw all fractions
@@ -64,7 +85,7 @@ public class Output {
 
     private static void drawLineMiddle(Game game, int lineY) {
         // draw left matrix wall
-        System.out.print("│");
+        drawMatrixLeftWall(lineY+1);
         drawFracSep();
 
         // draw all fractions and players
@@ -75,7 +96,7 @@ public class Output {
                 System.out.print("──");
             } else {
                 // player on this field, draw him
-                System.out.printf("%c%s", p.name, p.name);
+                System.out.print(p.getFigure());
             }
             drawFracSep();
         }
@@ -87,7 +108,7 @@ public class Output {
 
     private static void drawLineBottom(Game game, int lineY) {
         // draw left matrix wall
-        System.out.print("│");
+        drawMatrixLeftWall(0);
         drawFracSep();
 
         // draw all fractions
@@ -110,7 +131,7 @@ public class Output {
 
     private static void drawMatrixLineSep(int numFracsPerLine) {
         // draw left matrix wall
-        System.out.print("│");
+        drawMatrixLeftWall(0);
         drawFracSep();
 
         // padding
@@ -126,7 +147,7 @@ public class Output {
 
     private static void drawMatrixBottom(int numFracsPerLine) {
         // draw matrix top bottom left corner
-        System.out.print("└");
+        System.out.print("        └");
         drawFracSep();
 
         // padding
@@ -140,22 +161,48 @@ public class Output {
         System.out.println();
     }
 
+    private static void drawMatrixLeftWall(int rowId) {
+        if(rowId > 0) {
+            System.out.print(String.format("%7d ", rowId));
+        } else {
+            System.out.print("        ");
+        }
+        System.out.print("│");
+    }
+
     private static void drawFracSep() {
         System.out.print("   ");
     }
 
+    private static void drawLastEvent(Game game) {
+        if(game.getLastEvent() != null) {
+            System.out.println(game.getLastEvent());
+            System.out.println();
+        }
+    }
 
-    private static void clearScreen() {
+    private static void drawCurrentPlayer(Game game) {
+        System.out.println("Player at turn: " + game.getCurrentPlayer().getFigure());
+    }
+
+
+    private static void clearScreen() throws InterruptedException {
         try {
             if (IS_WINDOWS)
-                Runtime.getRuntime().exec("cls");
+            {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
             else
-                Runtime.getRuntime().exec("sh -c 'clear;clear'");
+            {
+                new ProcessBuilder("sh", "-c", "clear").inheritIO().start().waitFor();
+            }
         } catch (IOException e) {
             System.out.println(e);
             for (int i = 0; i < 50; i++) {
                 System.out.println();
             }
+        } catch (InterruptedException e) {
+            throw e;
         }
     }
 }

@@ -1,11 +1,20 @@
 import java.io.IOException;
 
+/**
+ * Main class to be executed from the command line
+ *
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ *
+ * @version 2017-12-21
+ */
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws InterruptedException {
         Game game = new Game(8, 8);
 
         while(true) {
             Output.draw(game);
+
             char input = Input.getInput();
 
             if(input == 'c'){
@@ -23,4 +32,5 @@ public class Main {
         }
 
     }
+
 }
