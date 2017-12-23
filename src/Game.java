@@ -8,7 +8,7 @@ public class Game {
     public static final int PLAYER_BLACK = 0;
     public static final int PLAYER_WHITE = 1;
 
-    private int sizeX,sizeY;
+    private int width, height;
     private int turn;
     private Player[] players = new Player[NUM_PLAYERS];
     private Fraction[] field;
@@ -16,26 +16,14 @@ public class Game {
     private Event lastEvent;
 
     Game(int width, int height) {
-        this.sizeX = width;
-        this.sizeY = height;
 
         // generate field
-        Random rng = new Random(System.currentTimeMillis());
-        field = new Fraction[width*height];
-        for (int i = 0; i < field.length; i++) {
-            int numerator = rng.nextInt(100);
-            int denominator = rng.nextInt(100-1)+1; // TODO: make sure the fraction's value is within range [1..10]
-            field[i] = new Fraction(numerator, denominator);
-        }
+        generateField(width, height);
 
         // place the players onto the field
         for (int i = 0; i < NUM_PLAYERS; i++) {
-            // TODO: place the players close to the center instead of random!
-            int posX = rng.nextInt(width);
-            int posY = rng.nextInt(height);
             char name = (char)(i == PLAYER_BLACK ? '▓' : i == PLAYER_WHITE ? '░' : 65+i-2);
-            players[i] = new Player(posX, posY, name);
-            field[posToIndex(posX, posY)] = null;
+            placePlayer(i, name);
         }
     }
 
@@ -51,9 +39,58 @@ public class Game {
 
     }
 
-    //Getter & Setter
+    private void generateField(int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        field = new Fraction[width*height];
+
+        for (int i = 0; i < field.length; i++) {
+            // generate a random numerator in range [1..99] (fractions shall not be zero)
+            int numerator = Util.randInt(1, 99);
+
+            // generate a denominator that assures the fraction to be less than or equals to 10
+            int denomBoundMin = (int)Math.ceil( ((double)numerator)/10.0 );
+            int denomBoundMax = Math.max(1, numerator-1); // the fraction must be greater than 1
+            int denominator = Util.randInt(denomBoundMin, denomBoundMax);
+
+            // make *really* sure that everything is sane (XXX should actually be unnecessary)
+            if((double)numerator/(double)denominator <= 10.0)
+                field[i] = new Fraction(numerator, denominator);
+            else
+                i--; // try again - XXX SHOULD NEVER HAPPEN!
+        }
+    }
+
+    private void placePlayer(int id, char name) {
+        Random rng = new Random(System.nanoTime());
+
+        // place players around the middle, in the second third of the field
+        final int xw = (int)Math.ceil((double)width/3.0);
+        final int yh = (int)Math.ceil((double)height/3.0);
+
+        while(true) {
+            int xCoord = rng.nextInt(xw) + xw;
+            int yCoord = rng.nextInt(yh) + yh;
+
+            // make sure players don't get placed right in the middle (cuz forbidden by rulez)
+            if(width % 2 == 0 && height % 2 == 0 &&
+                    xCoord == width/2 && yCoord == height/2)
+                continue;
+
+            if(getPlayerAt(xCoord, yCoord) == null) {
+                players[id] = new Player(xCoord, yCoord, name);
+                field[posToIndex(xCoord, yCoord)] = null;
+                break;
+            }
+        }
+    }
+
+
+    // getters and setters
+
     public int posToIndex(int x, int y) {
-        return x + sizeX * y;
+        return x + width * y;
     }
 
     public Fraction getFieldPos(int x, int y){
@@ -62,7 +99,8 @@ public class Game {
 
     public Player getPlayerAt(int x, int y) {
         for(Player p : players) {
-            if(p.x == x && p.y == y)
+            if(p != null &&
+                    p.x == x && p.y == y)
                 return p;
         }
         return null;
@@ -80,12 +118,12 @@ public class Game {
         return winner;
     }
 
-    public int getSizeX() {
-        return sizeX;
+    public int getWidth() {
+        return width;
     }
 
-    public int getSizeY() {
-        return sizeY;
+    public int getHeight() {
+        return height;
     }
 
     public int getTurn() {

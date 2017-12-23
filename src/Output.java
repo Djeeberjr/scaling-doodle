@@ -7,8 +7,8 @@ public class Output {
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
     public static void draw(Game game) throws InterruptedException {
-        final int height = game.getSizeY();
-        final int width = game.getSizeX();
+        final int height = game.getHeight();
+        final int width = game.getWidth();
 
         clearScreen();
         drawGridTop(width);
@@ -66,7 +66,7 @@ public class Output {
         drawFracSep();
 
         // draw all fractions
-        for (int x = 0; x < game.getSizeX(); x++) {
+        for (int x = 0; x < game.getWidth(); x++) {
             Player p = game.getPlayerAt(x, lineY);
             if(p == null) {
                 // no player here; draw fraction
@@ -89,7 +89,7 @@ public class Output {
         drawFracSep();
 
         // draw all fractions and players
-        for (int x = 0; x < game.getSizeX(); x++) {
+        for (int x = 0; x < game.getWidth(); x++) {
             Player p = game.getPlayerAt(x, lineY);
             if(p == null) {
                 // no player here; draw fraction
@@ -112,7 +112,7 @@ public class Output {
         drawFracSep();
 
         // draw all fractions
-        for (int x = 0; x < game.getSizeX(); x++) {
+        for (int x = 0; x < game.getWidth(); x++) {
             Player p = game.getPlayerAt(x, lineY);
             if(p == null) {
                 // no player here; draw fraction
