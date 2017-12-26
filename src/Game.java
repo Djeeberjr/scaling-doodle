@@ -32,7 +32,53 @@ public class Game {
 
         if(move != Move.INVALID) {
 
-            // TODO: implementation
+            Player currentPlayer = getCurrentPlayer();
+            int moveX = currentPlayer.x;
+            int moveY = currentPlayer.y;
+
+            switch (move){
+                case DOWN:
+                    moveY++;
+                    break;
+                case UP:
+                    moveY--;
+                    break;
+                case LEFT:
+                    moveX--;
+                    break;
+                case RIGHT:
+                    moveX++;
+            }
+
+            //check if move is out of bounds
+            if(posToIndex(moveX,moveY) > field.length){
+                //move is out of bounds
+                return;
+            }
+
+            //check if move is blocked by other player
+            if(getPlayerAt(moveX,moveY) != null){
+                //Move is blocked by other player
+                return;
+            }
+
+            //move is valid!
+
+            //add score to player
+            if(!getFieldPos(moveX,moveY).isNaN()){
+                if(currentPlayer.score.isNaN()){
+                    currentPlayer.score = getFieldPos(moveX,moveY);
+                }else{
+                    currentPlayer.score.add(getFieldPos(moveX,moveY));
+                }
+            }
+
+            //set value to 0 at move location
+            field[posToIndex(moveX,moveY)] = new Fraction(0,0);
+
+            //move player
+            currentPlayer.x = moveX;
+            currentPlayer.y = moveY;
 
             turn = (turn + 1) % NUM_PLAYERS;
         }
