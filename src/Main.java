@@ -24,7 +24,7 @@ public class Main {
 
             game.processInput(Input.getMove(input));
 
-            if(game.getWinner() > 0){
+            if(game.getWinner() >= 0){
                 Output.draw(game);
                 System.out.println("We have a winner!");
                 break;

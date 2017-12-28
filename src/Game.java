@@ -51,7 +51,7 @@ public class Game {
             }
 
             //check if move is out of bounds
-            if(posToIndex(moveX,moveY) > field.length){
+            if(moveX >= width || moveY >= height || moveX < 0 || moveY < 0){
                 //move is out of bounds
                 return;
             }
@@ -69,7 +69,7 @@ public class Game {
                 if(currentPlayer.score.isNaN()){
                     currentPlayer.score = getFieldPos(moveX,moveY);
                 }else{
-                    currentPlayer.score.add(getFieldPos(moveX,moveY));
+                    currentPlayer.score = currentPlayer.score.add(getFieldPos(moveX,moveY));
                 }
             }
 
