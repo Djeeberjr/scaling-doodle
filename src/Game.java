@@ -126,7 +126,7 @@ public class Game {
 
             if(getPlayerAt(xCoord, yCoord) == null) {
                 players[id] = new Player(xCoord, yCoord, name);
-                field[posToIndex(xCoord, yCoord)] = null;
+                field[posToIndex(xCoord, yCoord)] = new Fraction(0,0);
                 break;
             }
         }
