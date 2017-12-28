@@ -7,6 +7,7 @@ public class Game {
     public static final int NUM_PLAYERS = 2;
     public static final int PLAYER_BLACK = 0;
     public static final int PLAYER_WHITE = 1;
+    public static final int WIN_SCORE = 80;
 
     private int width, height;
     private int turn;
@@ -80,6 +81,8 @@ public class Game {
             currentPlayer.x = moveX;
             currentPlayer.y = moveY;
 
+            checkWinner();
+
             turn = (turn + 1) % NUM_PLAYERS;
         }
 
@@ -132,6 +135,15 @@ public class Game {
         }
     }
 
+    private void checkWinner(){
+
+        if(!getCurrentPlayer().score.isNaN() && getCurrentPlayer().score.intValue() >= WIN_SCORE){
+            winner = turn;
+            return;
+        }
+
+        //TODO: check if all tiles in the field are empty or if winning is still possible
+    }
 
     // getters and setters
 
