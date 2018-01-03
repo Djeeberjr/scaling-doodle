@@ -40,7 +40,8 @@ public class Output {
         } else if(lineY >= 3 && lineY-3 < game.getNumPlayers()) {
             int i = lineY-3;
             Player p = game.getPlayer(i);
-            System.out.printf("%s Player %d: %s (%.2f)", p.getFigure(), i, p.score.toString(), p.score.doubleValue());
+            //System.out.printf("%s Player %d: %s (%.2f)", p.getFigure(), i, p.score.toString(), p.score.doubleValue());
+            System.out.printf("%s Player %d: %.2f", p.getFigure(), i, p.score.doubleValue());
             if(game.getCurrentPlayer() == p) {
                 System.out.print(" ««");
             }

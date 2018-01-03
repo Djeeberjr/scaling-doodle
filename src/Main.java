@@ -12,10 +12,6 @@ public class Main {
     public static void main(String[] args) throws InterruptedException, IOException {
         Game game = new Game(8, 8);
 
-        if(Output.IS_WINDOWS){
-            new ProcessBuilder("cmd", "/c", "mode con: cols=100 lines=45").inheritIO().start().waitFor();
-        }
-
         while(true) {
             Output.draw(game);
 
