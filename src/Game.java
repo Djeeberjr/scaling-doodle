@@ -1,5 +1,3 @@
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.Random;
 
 /**
@@ -34,7 +32,7 @@ public class Game {
         // make sure there is enough value on the field
         if(checkWinner() && winner < 0) {
             System.out.println("++++ SHIT HAPPENS AND THINGS ARE FÖR LITEN! ++++");
-            throw new NotImplementedException();
+            throw new RuntimeException("Not implemented");
         }
     }
 
@@ -96,7 +94,7 @@ public class Game {
             if(checkWinner()) {
                 // game has ended ... TODO: what to do about it?
                 System.out.println("++++ GAME HAS ENDED BUT NOONE CARES DUUDE! ++++");
-                throw new NotImplementedException();
+                throw new RuntimeException("Not implemented");
             } else {
                 turn = (turn + 1) % NUM_PLAYERS;
             }
@@ -175,8 +173,8 @@ public class Game {
                 } else {
                     fieldSum = fieldSum.add(frac);
                 }
-                System.out.println("+ " + frac + " -> " + frac.doubleValue());
-                System.out.println("= " + fieldSum + " -> " + fieldSum.doubleValue());
+                //System.out.println("+ " + frac + " -> " + frac.doubleValue());
+                //System.out.println("= " + fieldSum + " -> " + fieldSum.doubleValue());
             }
         }
 
