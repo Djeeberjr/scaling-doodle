@@ -15,6 +15,7 @@ public class Game {
     private int turn;
     private Player[] players;
     private Fraction[] field;
+    private Fraction fieldSum;
     private int winner = -1;
     private Event lastEvent;
 
@@ -166,7 +167,7 @@ public class Game {
         // check if all tiles in the field are empty or if winning is still possible
 
         // count how much value is left on the field
-        Fraction fieldSum = null;
+        fieldSum = null;
         for (Fraction frac : field) {
             if (frac != null) {
                 if(fieldSum == null) {
@@ -222,8 +223,16 @@ public class Game {
         return null;
     }
 
+    public int getNumPlayers() {
+        return players.length;
+    }
+
     public Player getCurrentPlayer() {
         return players[turn];
+    }
+
+    public Player getPlayer(int i) {
+        return players[i];
     }
 
     public Event getLastEvent() {
@@ -244,6 +253,10 @@ public class Game {
 
     public int getTurn() {
         return turn;
+    }
+
+    public Fraction getFieldSum() {
+        return fieldSum;
     }
 }
 

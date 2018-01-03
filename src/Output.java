@@ -14,11 +14,12 @@ public class Output {
         drawGridTop(width);
         drawMatrixTop(width);
         for(int y = 0; y < height; y++) {
-            drawLineTop(game, y);
-            drawLineMiddle(game, y);
-            drawLineBottom(game, y);
-            if(y < height-1)
-                drawMatrixLineSep(width);
+            drawLineTop(game, y); drawRightColumn(game, y*4+0);
+            drawLineMiddle(game, y); drawRightColumn(game, y*4+1);
+            drawLineBottom(game, y); drawRightColumn(game, y*4+2);
+            if(y < height-1) {
+                drawMatrixLineSep(width); drawRightColumn(game, y*4+3);
+            }
         }
         drawMatrixBottom(width);
         System.out.println();
@@ -28,6 +29,28 @@ public class Output {
 
         // make sure that everything has been written out before returning
         System.out.flush();
+    }
+
+    private static void drawRightColumn(Game game, int lineY) {
+        System.out.print("  ");
+        if(lineY == 0) {
+            System.out.print("Score Limit: " + Game.WIN_SCORE);
+        } else if(lineY == 1) {
+            System.out.printf("Value left: %.2f", game.getFieldSum().doubleValue());
+        } else if(lineY >= 3 && lineY-3 < game.getNumPlayers()) {
+            int i = lineY-3;
+            Player p = game.getPlayer(i);
+            System.out.printf("%s Player %d: %s (%.2f)", p.getFigure(), i, p.score.toString(), p.score.doubleValue());
+            if(game.getCurrentPlayer() == p) {
+                System.out.print(" ««");
+            }
+        } else if((lineY-=game.getNumPlayers()) == 4) {
+            // XXX: add more info
+        } else if(lineY == 5) {
+            // XXX: add even more info
+        }
+
+        System.out.println();
     }
 
     private static void drawGridTop(int numFracsPerLine) {
@@ -86,7 +109,6 @@ public class Output {
 
         // draw right matrix wall
         System.out.print("│");
-        System.out.println();
     }
 
     private static void drawLineMiddle(Game game, int lineY) {
@@ -114,7 +136,6 @@ public class Output {
 
         // draw right matrix wall
         System.out.print("│");
-        System.out.println();
     }
 
     private static void drawLineBottom(Game game, int lineY) {
@@ -143,7 +164,6 @@ public class Output {
 
         // draw right matrix wall
         System.out.print("│");
-        System.out.println();
     }
 
     private static void drawMatrixLineSep(int numFracsPerLine) {
@@ -159,7 +179,6 @@ public class Output {
 
         // draw right matrix wall
         System.out.print("│");
-        System.out.println();
     }
 
     private static void drawMatrixBottom(int numFracsPerLine) {
