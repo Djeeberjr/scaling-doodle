@@ -4,7 +4,7 @@ import java.io.IOException;
  * Handles console output and makes the game look great
  */
 public class Output {
-    private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
+    public static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
     public static void draw(Game game) throws InterruptedException {
         final int height = game.getHeight();
