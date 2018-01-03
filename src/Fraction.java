@@ -8,13 +8,14 @@ import java.math.BigInteger;
  */
 public class Fraction extends Number implements Comparable<Fraction> {
 
-    public static final Fraction NaN = new Fraction("0", "0");
+    public static final Fraction NaN = new Fraction(0, 0);
+    public static final Fraction ZERO = new Fraction(0, 1);
 
     final private BigInteger numerator;
     final private BigInteger denominator;
 
 
-    public Fraction(BigInteger numerator, BigInteger denominator) {
+    private Fraction(BigInteger numerator, BigInteger denominator, boolean reduce) {
 
         if(denominator.compareTo(BigInteger.ZERO) < 0){
             denominator = denominator.negate();
@@ -24,7 +25,8 @@ public class Fraction extends Number implements Comparable<Fraction> {
         if(denominator.compareTo(BigInteger.ZERO) == 0) {
             this.numerator = BigInteger.ZERO;
             this.denominator = BigInteger.ZERO;
-        } else {
+        } else if(reduce) {
+            // kürzen
             BigInteger foo = ggt(numerator, denominator);
 
             if (foo.compareTo(BigInteger.ZERO) == 0) {
@@ -35,11 +37,18 @@ public class Fraction extends Number implements Comparable<Fraction> {
                 this.denominator = denominator.divide(foo);
 
             }
+        } else {
+            this.numerator = numerator;
+            this.denominator = denominator;
         }
     }
 
+    public Fraction(BigInteger numerator, BigInteger denominator) {
+        this(numerator, denominator, true);
+    }
+
     public Fraction(String numerator, String denominator) {
-        this(new BigInteger(numerator),new BigInteger(denominator));
+        this(new BigInteger(numerator), new BigInteger(denominator));
     }
 
     public Fraction(int numerator, int denominator) {
@@ -77,8 +86,10 @@ public class Fraction extends Number implements Comparable<Fraction> {
         if (r.denominator.compareTo(this.denominator) == 0) {
             return new Fraction(r.numerator.add(this.numerator), this.denominator);
         } else {
-            Fraction a = this.extend(r.denominator);
-            Fraction b = r.extend(this.denominator);
+            BigInteger smallesCommonDenominator = kgv(this.denominator, r.denominator);
+
+            Fraction a = this.extendTo(smallesCommonDenominator);
+            Fraction b = r.extendTo(smallesCommonDenominator);
 
             return new Fraction(a.numerator.add(b.numerator), b.denominator);
         }
@@ -107,8 +118,13 @@ public class Fraction extends Number implements Comparable<Fraction> {
         return (this.denominator.equals(BigInteger.ONE));
     }
 
-    public Fraction extend(BigInteger foo) {
-        return new Fraction(numerator.multiply(foo), denominator.multiply(foo));
+    public Fraction extendBy(BigInteger extensionMultiplier) {
+        return new Fraction(numerator.multiply(extensionMultiplier), denominator.multiply(extensionMultiplier), false);
+    }
+
+    public Fraction extendTo(BigInteger wantedDenom) {
+        BigInteger extensionMultiplier = wantedDenom.divide(denominator);
+        return extendBy(extensionMultiplier);
     }
 
     public boolean isNaN() {
@@ -128,7 +144,7 @@ public class Fraction extends Number implements Comparable<Fraction> {
     public String toString() {
         if(isInteger()){
             return intValue() + "";
-        }else{
+        } else {
             return isNaN() ? "NaN" : numerator + "/" + denominator;
         }
 
@@ -158,10 +174,14 @@ public class Fraction extends Number implements Comparable<Fraction> {
     }
 
 
-    private BigInteger ggt(BigInteger a, BigInteger b) {
+    private static BigInteger ggt(BigInteger a, BigInteger b) {
         if(b.compareTo(BigInteger.ZERO) == 0)
             return a;
         BigInteger mod = a.mod(b);
         return mod.equals(BigInteger.ZERO) ? b : ggt(b, mod);
+    }
+
+    private static BigInteger kgv(BigInteger x, BigInteger y){
+        return x.multiply(y).divide(ggt(x,y));
     }
 }

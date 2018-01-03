@@ -1,3 +1,5 @@
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.Random;
 
 /**
@@ -11,7 +13,7 @@ public class Game {
 
     private int width, height;
     private int turn;
-    private Player[] players = new Player[NUM_PLAYERS];
+    private Player[] players;
     private Fraction[] field;
     private int winner = -1;
     private Event lastEvent;
@@ -22,13 +24,20 @@ public class Game {
         generateField(width, height);
 
         // place the players onto the field
+        players = new Player[NUM_PLAYERS];
         for (int i = 0; i < NUM_PLAYERS; i++) {
             char name = (char)(i == PLAYER_BLACK ? '▓' : i == PLAYER_WHITE ? '░' : 65+i-2);
             placePlayer(i, name);
         }
+
+        // make sure there is enough value on the field
+        if(checkWinner() && winner < 0) {
+            System.out.println("++++ SHIT HAPPENS AND THINGS ARE FÖR LITEN! ++++");
+            throw new NotImplementedException();
+        }
     }
 
-    public void processInput(Move move){
+    public void processInput(Move move) {
         lastEvent = new Event(getCurrentPlayer(), move);
 
         if(move != Move.INVALID) {
@@ -54,19 +63,21 @@ public class Game {
             //check if move is out of bounds
             if(moveX >= width || moveY >= height || moveX < 0 || moveY < 0){
                 //move is out of bounds
+                lastEvent = new Event(getCurrentPlayer(), Move.INVALID);
                 return;
             }
 
             //check if move is blocked by other player
             if(getPlayerAt(moveX,moveY) != null){
                 //Move is blocked by other player
+                lastEvent = new Event(getCurrentPlayer(), Move.INVALID);
                 return;
             }
 
             //move is valid!
 
             //add score to player
-            if(!getFieldPos(moveX,moveY).isNaN()){
+            if(getFieldPos(moveX,moveY) != null && !getFieldPos(moveX,moveY).isNaN()){
                 if(currentPlayer.score.isNaN()){
                     currentPlayer.score = getFieldPos(moveX,moveY);
                 }else{
@@ -74,16 +85,20 @@ public class Game {
                 }
             }
 
-            //set value to 0 at move location
-            field[posToIndex(moveX,moveY)] = new Fraction(0,0);
+            // remove the fraction from the field
+            field[posToIndex(moveX,moveY)] = null;
 
             //move player
             currentPlayer.x = moveX;
             currentPlayer.y = moveY;
 
-            checkWinner();
-
-            turn = (turn + 1) % NUM_PLAYERS;
+            if(checkWinner()) {
+                // game has ended ... TODO: what to do about it?
+                System.out.println("++++ GAME HAS ENDED BUT NOONE CARES DUUDE! ++++");
+                throw new NotImplementedException();
+            } else {
+                turn = (turn + 1) % NUM_PLAYERS;
+            }
         }
 
     }
@@ -104,11 +119,13 @@ public class Game {
             int denominator = Util.randInt(denomBoundMin, denomBoundMax);
 
             // make *really* sure that everything is sane (XXX should actually be unnecessary)
-            if((double)numerator/(double)denominator <= 10.0)
+            double fracTotal = (double)numerator/(double)denominator;
+            if(fracTotal <= 10.0 && fracTotal >= 1.0)
                 field[i] = new Fraction(numerator, denominator);
             else
                 i--; // try again - XXX SHOULD NEVER HAPPEN!
         }
+
     }
 
     private void placePlayer(int id, char name) {
@@ -129,20 +146,61 @@ public class Game {
 
             if(getPlayerAt(xCoord, yCoord) == null) {
                 players[id] = new Player(xCoord, yCoord, name);
-                field[posToIndex(xCoord, yCoord)] = new Fraction(0,0);
+                field[posToIndex(xCoord, yCoord)] = null;
                 break;
             }
         }
     }
 
-    private void checkWinner(){
+    /**
+     * Checks whether there's a winner or draw
+     * @return a boolean value indicating if the game has ended
+     */
+    private boolean checkWinner() {
 
-        if(!getCurrentPlayer().score.isNaN() && getCurrentPlayer().score.intValue() >= WIN_SCORE){
+        if(!getCurrentPlayer().score.isNaN() && getCurrentPlayer().score.longValue() >= WIN_SCORE) {
             winner = turn;
-            return;
+            return true;
         }
 
-        //TODO: check if all tiles in the field are empty or if winning is still possible
+        // check if all tiles in the field are empty or if winning is still possible
+
+        // count how much value is left on the field
+        Fraction fieldSum = null;
+        for (Fraction frac : field) {
+            if (frac != null) {
+                if(fieldSum == null) {
+                    fieldSum = frac;
+                } else {
+                    fieldSum = fieldSum.add(frac);
+                }
+                System.out.println("+ " + frac + " -> " + frac.doubleValue());
+                System.out.println("= " + fieldSum + " -> " + fieldSum.doubleValue());
+            }
+        }
+
+        // field is empty?
+        if(fieldSum == null || fieldSum.isNaN()) {
+            winner = -1;
+            return true;
+        }
+
+        // find out what the largest score is
+        Fraction largestScore = players[0].score;
+        for (int i = 1; i < players.length; i++) {
+            if(players[i].score.compareTo(largestScore) > 0) {
+                largestScore = players[i].score;
+            }
+        }
+
+        // if the player with most score can't win by eating everything, no more winning is possible
+        if(largestScore.add(fieldSum).doubleValue() < WIN_SCORE) {
+            System.out.println("fieldSum = " + fieldSum + " -> " + fieldSum.doubleValue());
+            winner = -1;
+            return true;
+        }
+
+        return false;
     }
 
     // getters and setters

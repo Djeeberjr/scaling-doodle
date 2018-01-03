@@ -11,7 +11,7 @@ public class Player {
         this.x = x;
         this.y = y;
         this.name = name;
-        this.score = new Fraction(0,0);
+        this.score = Fraction.ZERO;
     }
 
     public String getFigure() {

@@ -70,7 +70,13 @@ public class Output {
             Player p = game.getPlayerAt(x, lineY);
             if(p == null) {
                 // no player here; draw fraction
-                System.out.printf("%2d", game.getFieldPos(x, lineY).getNumerator());
+                Fraction frac = game.getFieldPos(x, lineY);
+                if(frac == null) {
+                    // no fraction here; draw eternal void
+                    System.out.print("  ");
+                } else {
+                    System.out.printf("%2d", frac.getNumerator());
+                }
             } else {
                 // player here, draw no fraction
                 System.out.print("  ");
@@ -92,8 +98,13 @@ public class Output {
         for (int x = 0; x < game.getWidth(); x++) {
             Player p = game.getPlayerAt(x, lineY);
             if(p == null) {
-                // no player here; draw fraction
-                System.out.print("──");
+                // no player here; draw fraction seperator
+                if(game.getFieldPos(x, lineY) == null) {
+                    // no fraction here; draw eternal void
+                    System.out.print("  ");
+                } else {
+                    System.out.print("──");
+                }
             } else {
                 // player on this field, draw him
                 System.out.print(p.getFigure());
@@ -116,7 +127,13 @@ public class Output {
             Player p = game.getPlayerAt(x, lineY);
             if(p == null) {
                 // no player here; draw fraction
-                System.out.printf("%2d", game.getFieldPos(x, lineY).getDenominator());
+                Fraction frac = game.getFieldPos(x, lineY);
+                if(frac == null) {
+                    // no fraction here; draw eternal void
+                    System.out.print("  ");
+                } else {
+                    System.out.printf("%2d", frac.getDenominator());
+                }
             } else {
                 // player here, draw no fraction
                 System.out.print("  ");
