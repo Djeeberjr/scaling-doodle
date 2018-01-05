@@ -32,7 +32,7 @@ public class Game {
         // make sure there is enough value on the field
         if(checkWinner() && winner < 0) {
             System.out.println("++++ SHIT HAPPENS AND THINGS ARE FÖR LITEN! ++++");
-            throw new RuntimeException("Not implemented");
+            throw new RuntimeException("Not implemented"); // XXX TODO FIXME
         }
     }
 
@@ -92,9 +92,19 @@ public class Game {
             currentPlayer.y = moveY;
 
             if(checkWinner()) {
-                // game has ended ... TODO: what to do about it?
+                // game has ended TODO make this better; the following is just for debugging and testing
                 System.out.println("++++ GAME HAS ENDED BUT NOONE CARES DUUDE! ++++");
-                throw new RuntimeException("Not implemented");
+                for(Player p : players) {
+                    System.out.println(String.format("%s %s (%.2f)", p.getFigure(), p.score.toString(), p.score.doubleValue()));
+                }
+
+                if(winner >= 0)
+                    System.out.println(">> " + players[winner].getFigure() + " won!!");
+                else
+                    System.out.println(">> draw! (winning impossible)");
+
+
+                throw new RuntimeException("Not implemented"); // TODO this is a bad way to exit.
             } else {
                 turn = (turn + 1) % NUM_PLAYERS;
             }
