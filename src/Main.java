@@ -9,28 +9,9 @@ import java.io.IOException;
  * @version 2017-12-21
  */
 public class Main {
-    public static void main(String[] args) throws InterruptedException, IOException {
-        Game game = new Game(8, 8);
-
-        while(true) {
-            Output.draw(game);
-
-            char input = Input.getInput();
-
-            if(input == 'c'){
-                System.out.println("Good Bye");
-                break;
-            }
-
-            game.processInput(Input.getMove(input));
-
-            if(game.getWinner() >= 0){
-                Output.draw(game);
-                System.out.println("We have a winner!");
-                break;
-            }
-        }
-
+    public static void main(String[] args) {
+        ConsoleGame cg = new ConsoleGame();
+        cg.run();
     }
 
 }
