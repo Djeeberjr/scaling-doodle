@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 /**
  * Main class to be executed from the command line
  *

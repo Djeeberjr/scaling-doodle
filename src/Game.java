@@ -19,21 +19,19 @@ public class Game {
 
     Game(int width, int height) {
 
-        // generate field
-        generateField(width, height);
+        do {
+            // generate field
+            generateField(width, height);
 
-        // place the players onto the field
-        players = new Player[NUM_PLAYERS];
-        for (int i = 0; i < NUM_PLAYERS; i++) {
-            char name = (char)(i == PLAYER_BLACK ? '▓' : i == PLAYER_WHITE ? '░' : 65+i-2);
-            placePlayer(i, name);
-        }
+            // place the players onto the field
+            players = new Player[NUM_PLAYERS];
+            for (int i = 0; i < NUM_PLAYERS; i++) {
+                char name = (char) (i == PLAYER_BLACK ? '▓' : i == PLAYER_WHITE ? '░' : 65 + i - 2);
+                placePlayer(i, name);
+            }
 
-        // make sure there is enough value on the field
-        if(checkWinner() && winner < 0) {
-            System.out.println("++++ SHIT HAPPENS AND THINGS ARE FÖR LITEN! ++++");
-            throw new RuntimeException("Not implemented"); // XXX TODO FIXME
-        }
+            // make sure there is enough value on the field
+        } while(checkWinner() && winner < 0);
     }
 
     public void processInput(Move move) {
@@ -98,13 +96,6 @@ public class Game {
                     System.out.println(String.format("%s %s (%.2f)", p.getFigure(), p.score.toString(), p.score.doubleValue()));
                 }
 
-                if(winner >= 0)
-                    System.out.println(">> " + players[winner].getFigure() + " won!!");
-                else
-                    System.out.println(">> draw! (winning impossible)");
-
-
-                throw new RuntimeException("Not implemented"); // TODO this is a bad way to exit.
             } else {
                 turn = (turn + 1) % NUM_PLAYERS;
             }
@@ -168,7 +159,7 @@ public class Game {
     private boolean checkWinner() {
 
         if(!getCurrentPlayer().score.isNaN() && getCurrentPlayer().score.longValue() >= WIN_SCORE) {
-            winner = turn;
+            winner = turn+1;
             return true;
         }
 
@@ -190,7 +181,7 @@ public class Game {
 
         // field is empty?
         if(fieldSum == null || fieldSum.isNaN()) {
-            winner = -1;
+            winner = 0;
             return true;
         }
 
@@ -205,7 +196,7 @@ public class Game {
         // if the player with most score can't win by eating everything, no more winning is possible
         if(largestScore.add(fieldSum).doubleValue() < WIN_SCORE) {
             System.out.println("fieldSum = " + fieldSum + " -> " + fieldSum.doubleValue());
-            winner = -1;
+            winner = 0;
             return true;
         }
 
@@ -247,6 +238,9 @@ public class Game {
         return lastEvent;
     }
 
+    /**
+     * @return 0: draw, >0: player id that won, <0: game running
+     */
     public int getWinner() {
         return winner;
     }

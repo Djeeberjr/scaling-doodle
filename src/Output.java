@@ -4,13 +4,28 @@ import java.io.IOException;
  * Handles console output and makes the game look great
  */
 public class Output {
-    public static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
     public static void draw(Game game) throws InterruptedException {
         final int height = game.getHeight();
         final int width = game.getWidth();
 
         clearScreen();
+
+        // draw end screen if a player won
+        int winner = game.getWinner();
+        if(winner >= 0) {
+            System.out.println("winner winner chicken dinner"); // TODO: proper endscreen
+
+            if(winner > 0)
+                System.out.println(">> " + game.getPlayer(winner).getFigure() + " Player " + winner + " won!!");
+            else
+                System.out.println(">> draw! (winning impossible)");
+
+            return;
+        }
+
+        // draw game
         drawGridTop(width);
         drawMatrixTop(width);
         for(int y = 0; y < height; y++) {
