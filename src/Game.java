@@ -1,7 +1,11 @@
 import java.util.Random;
 
 /**
- * This class contains all the game logic
+ * This class contains all the main game logic
+ *
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ * @version 1.7 09.01.18
  */
 public class Game {
     public static final int NUM_PLAYERS = 2;
@@ -258,7 +262,11 @@ public class Game {
 }
 
 /**
- * Represents a move conducted by a specific player
+ * Represents an action taken by a specific player
+ *
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ * @version 1.1 21.12.17
  */
 class Event {
     public final Player player;

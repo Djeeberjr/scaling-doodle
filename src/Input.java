@@ -3,6 +3,10 @@ import java.util.Scanner;
 
 /**
  * Waits for interactive input from stdin and passes it to the game
+ *
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ * @version 1.3 08.01.18
  */
 public class Input {
 

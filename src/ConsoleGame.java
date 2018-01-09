@@ -1,7 +1,12 @@
-import java.io.IOException;
-
+/**
+ * Contains the main game loop and connects the single components input, output and logic
+ *
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ * @version 1.0 08.01.18
+ */
 public class ConsoleGame {
-    Game game;
+    private Game game;
 
     ConsoleGame(){
         game = new Game(8,8);

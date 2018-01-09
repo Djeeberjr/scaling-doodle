@@ -1,5 +1,9 @@
 /**
  * Represents a player in the game
+ *
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ * @version 1.1 03.01.18
  */
 public class Player {
     public int x;

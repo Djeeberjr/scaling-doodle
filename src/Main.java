@@ -1,5 +1,8 @@
 /**
- * Main class to be executed from the command line
+ *     MaxFrac Game
+ *       an IProg project
+ *
+ * This is the main class to be executed from command line
  *
  * @author Niklas Kapelle
  * @author Henri Bußmann

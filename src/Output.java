@@ -1,7 +1,11 @@
 import java.io.IOException;
 
 /**
- * Handles console output and makes the game look great
+ * Handles console output (draws the game)
+ *
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ * @version 1.8 09.01.18
  */
 public class Output {
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");

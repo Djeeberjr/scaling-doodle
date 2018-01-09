@@ -1,5 +1,12 @@
 import java.util.Random;
 
+/**
+ * Static class that contains custom utility functions
+ *
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ * @version 1.0 23.12.17
+ */
 public class Util {
     private static final Random rng = new Random(System.nanoTime());
 

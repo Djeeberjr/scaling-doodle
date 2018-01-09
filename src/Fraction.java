@@ -4,7 +4,7 @@ import java.math.BigInteger;
  *
  * @author Niklas Kapelle
  * @author Henri Bußmann
- * @version 1.1 11.12.2017
+ * @version 1.2 03.01.2018
  */
 public class Fraction extends Number implements Comparable<Fraction> {
 
