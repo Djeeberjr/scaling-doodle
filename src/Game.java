@@ -85,17 +85,12 @@ public class Game {
             // remove the fraction from the field
             field[posToIndex(moveX,moveY)] = null;
 
-            //move player
+            // move player
             currentPlayer.x = moveX;
             currentPlayer.y = moveY;
 
             if(checkWinner()) {
-                // game has ended TODO make this better; the following is just for debugging and testing
-                System.out.println("++++ GAME HAS ENDED BUT NOONE CARES DUUDE! ++++");
-                for(Player p : players) {
-                    System.out.println(String.format("%s %s (%.2f)", p.getFigure(), p.score.toString(), p.score.doubleValue()));
-                }
-
+                // game has ended
             } else {
                 turn = (turn + 1) % NUM_PLAYERS;
             }

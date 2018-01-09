@@ -11,16 +11,44 @@ public class Output {
         final int width = game.getWidth();
 
         clearScreen();
+        System.out.println();
 
         // draw end screen if a player won
         int winner = game.getWinner();
         if(winner >= 0) {
-            System.out.println("winner winner chicken dinner"); // TODO: proper endscreen
-
+            System.out.println();
+            System.out.println();
+            System.out.println("       + + + + + + + + + + + + + + + + + + + + + + + + + + + +");
+            System.out.println("       +                                                     +");
             if(winner > 0)
-                System.out.println(">> " + game.getPlayer(winner).getFigure() + " Player " + winner + " won!!");
+                System.out.println("       +                 WE'VE GOT A WINNER!                 +");
             else
-                System.out.println(">> draw! (winning impossible)");
+                System.out.println("       +                   GAME HAS ENDED!                   +");
+            System.out.println("       +                                                     +");
+            System.out.println("       + + + + + + + + + + + + + + + + + + + + + + + + + + + +");
+            System.out.println();
+
+            if(winner > 0) {
+                winner--;
+                System.out.println(String.format("   Congratulations, %s Player %d! You won with %.2f of %d score!",
+                        game.getPlayer(winner).getFigure(), winner+1, game.getPlayer(winner).score.doubleValue(), Game.WIN_SCORE));
+            } else {
+                System.out.println("   Drawn! No more winning is possible.");
+                System.out.println("   There's not enough score left on the field for anyone to reach " + Game.WIN_SCORE + ".");
+            }
+
+            // print all the scores
+            System.out.println();
+            System.out.println("SCORES");
+            System.out.println("––––––––––––");
+            for (int i = 0; i < Game.NUM_PLAYERS; i++) {
+                Player p = game.getPlayer(i);
+                System.out.println(String.format("%s Player %d: %s (%.2f)", p.getFigure(), i+1, p.score.toString(), p.score.doubleValue()));
+            }
+
+            System.out.println();
+            System.out.println();
+            System.out.println();
 
             return;
         }
@@ -56,7 +84,7 @@ public class Output {
             int i = lineY-3;
             Player p = game.getPlayer(i);
             //System.out.printf("%s Player %d: %s (%.2f)", p.getFigure(), i, p.score.toString(), p.score.doubleValue());
-            System.out.printf("%s Player %d: %.2f", p.getFigure(), i, p.score.doubleValue());
+            System.out.printf("%s Player %d: %.2f", p.getFigure(), i+1, p.score.doubleValue());
             if(game.getCurrentPlayer() == p) {
                 System.out.print(" ««");
             }
