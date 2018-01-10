@@ -44,7 +44,7 @@ public class Output {
             // print all the scores
             System.out.println();
             System.out.println("SCORES");
-            System.out.println("––––––––––––");
+            System.out.println("============");
             for (int i = 0; i < Game.NUM_PLAYERS; i++) {
                 Player p = game.getPlayer(i);
                 System.out.println(String.format("%s Player %d: %s (%.2f)", p.getFigure(), i+1, p.score.toString(), p.score.doubleValue()));
