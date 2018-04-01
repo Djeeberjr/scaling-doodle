@@ -7,10 +7,10 @@ import java.io.IOException;
  * @author Henri Bußmann
  * @version 1.8 09.01.18
  */
-public class Output {
+public class ConsoleOutput implements IOutput {
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
-    public static void draw(Game game) throws InterruptedException {
+    public void draw(Game game) throws InterruptedException {
         final int height = game.getHeight();
         final int width = game.getWidth();
 

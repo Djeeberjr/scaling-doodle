@@ -202,14 +202,29 @@ public class Game {
         return false;
     }
 
-    // getters and setters
+
+    // helpers
 
     public int posToIndex(int x, int y) {
         return x + width * y;
     }
 
-    public Fraction getFieldPos(int x, int y){
+    public int indexToX(int i) {
+        return i % width;
+    }
+
+    public int indexToY(int i) {
+        return i / width;
+    }
+
+    // getters and setters
+
+    public Fraction getFieldPos(int x, int y) {
         return field[posToIndex(x, y)];
+    }
+
+    public Fraction getFieldIndex(int i) {
+        return field[i];
     }
 
     public Player getPlayerAt(int x, int y) {
@@ -219,6 +234,10 @@ public class Game {
                 return p;
         }
         return null;
+    }
+
+    public Player getPlayerOn(int index) {
+        return getPlayerAt(indexToX(index), indexToY(index));
     }
 
     public int getNumPlayers() {

@@ -5,19 +5,21 @@
  * @author Henri Bußmann
  * @version 1.0 08.01.18
  */
-public class ConsoleGame {
+public class ConsoleGame implements IGame {
     private Game game;
+    private IOutput output;
 
     ConsoleGame(){
         game = new Game(8,8);
+        output = new ConsoleOutput();
     }
 
-    public void run() {
+    public void runGame() {
 
         while(true) {
 
             try{
-                Output.draw(game);
+                output.draw(game);
             }catch (InterruptedException e){
                 break;
             }
@@ -26,14 +28,14 @@ public class ConsoleGame {
                 break;
             }
 
-            char input = Input.getInput();
+            char input = ConsoleInput.getInput();
 
             if(input == 'c'){
                 System.out.println("Good Bye");
                 break;
             }
 
-            game.processInput(Input.getMove(input));
+            game.processInput(ConsoleInput.getMove(input));
         }
     }
 

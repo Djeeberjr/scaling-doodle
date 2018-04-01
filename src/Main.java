@@ -11,8 +11,25 @@
  */
 public class Main {
     public static void main(String[] args) {
-        ConsoleGame cg = new ConsoleGame();
-        cg.run();
+
+        String type = "console";
+        if(args.length > 0)
+            type = args[0].toLowerCase();
+
+        IGame game;
+        switch (type.charAt(0)) {
+            case 'c':
+                game = new ConsoleGame();
+                break;
+            case 'w':
+                game = new WindowGame();
+                break;
+            default:
+                System.out.println("Type '" + type + "' does not exist; try 'console' or 'window'");
+                return;
+        }
+
+        game.runGame();
     }
 
 }
