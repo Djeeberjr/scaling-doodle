@@ -11,6 +11,7 @@ public class WindowGame extends JFrame implements ActionListener, IGame, IOutput
     private Game game;
     private IOutput output;
     private JButton buttons[];
+    private JLabel scoresDisplay;
 
     WindowGame() {
         this.game = new Game(8,8);
@@ -48,7 +49,7 @@ public class WindowGame extends JFrame implements ActionListener, IGame, IOutput
         scoresArea.setPreferredSize(new Dimension(300, 600));
 
         // create a
-        JLabel scoresDisplay = new JLabel();
+        scoresDisplay = new JLabel();
         scoresDisplay.setVerticalAlignment(JLabel.TOP);
         scoresDisplay.setText("<html><div style='text-align: center;'>-= Scores =-</div><br>1. profi<br>2. noob.</html>");
         scoresArea.add(scoresDisplay);
@@ -79,7 +80,18 @@ public class WindowGame extends JFrame implements ActionListener, IGame, IOutput
     public void actionPerformed(ActionEvent e) {
         JButton button = (JButton)e.getSource();
 
-        // handle the button press
+        //TODO: handle the button press
+        int bx = game.indexToX(Integer.parseInt(button.getActionCommand()));
+        int by = game.indexToY(Integer.parseInt(button.getActionCommand()));
+
+        Player p = game.getCurrentPlayer();
+        int px = p.x;
+        int py = p.y;
+
+        int dx = bx-px;
+        int dy = by-py;
+
+        game.processInput(dx, dy);
 
         // redraw
         draw(game);
@@ -106,23 +118,26 @@ public class WindowGame extends JFrame implements ActionListener, IGame, IOutput
                 button.setText(playerOnField.getFigure());
                 button.setEnabled(false);
                 // highlight players
-                if(playerOnField == game.getCurrentPlayer())
-                    button.setBackground(Color.CYAN);
-                else
-                    button.setBackground(Color.WHITE);
+                button.setBackground(playerOnField == game.getPlayer(0) ? Color.BLUE : Color.ORANGE);
                 button.setVisible(true);
-            } else if(field == null) {
-                // no player and no fraction; hide the button.
-                button.setEnabled(false);
-                button.setVisible(false);
+//            } else if(field == null) {
+                // no player and no fraction; we can go there but nothing happens
+//                button.setEnabled(true);
+//                button.setVisible(true);
+//                button.setText("");
             } else {
                 // there is still a fraction here, display it
-                button.setText(
-                        "<html><div style='text-align: center; font: bold \"Noto Sans\" monospace;'>"
-                                +field.getNumerator() + "<br>"
-                                +"──" + "<br>"
-                                +field.getDenominator()
-                                +"</div></html>");
+                if(field != null) {
+                    button.setText(
+                            "<html><div style='text-align: center; font: bold \"Noto Sans\" monospace;'>"
+                                    + field.getNumerator() + "<br>"
+                                    + "──" + "<br>"
+                                    + field.getDenominator()
+                                    + "</div></html>");
+                } else {
+                    // field is null
+                    button.setText("");
+                }
 
                 // check whether the button can be clicked
                 // this is the tricky part; we have to determine whether the current player can go on this field
@@ -138,6 +153,13 @@ public class WindowGame extends JFrame implements ActionListener, IGame, IOutput
                 button.setVisible(true);
             }
         }
+
+        //Update score
+        this.scoresDisplay.setText("<html><div style='text-align: center;'>-= Scores =-</div><br>1. profi :"
+                + game.getPlayer(0).score
+                +" <br>2. noob :"
+                + game.getPlayer(1).score
+                +" </html>");
 
     }
 

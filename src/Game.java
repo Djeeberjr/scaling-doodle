@@ -38,66 +38,75 @@ public class Game {
         } while(checkWinner() && winner < 0);
     }
 
+    public void processInput(int dx, int dy) {
+
+        Player currentPlayer = getCurrentPlayer();
+        int moveX = currentPlayer.x+ dx;
+        int moveY = currentPlayer.y+dy;
+
+        //check if move is out of bounds
+        if(moveX >= width || moveY >= height || moveX < 0 || moveY < 0){
+            //move is out of bounds
+            lastEvent = new Event(getCurrentPlayer(), Move.INVALID);
+            return;
+        }
+
+        //check if move is blocked by other player
+        if(getPlayerAt(moveX,moveY) != null){
+            //Move is blocked by other player
+            lastEvent = new Event(getCurrentPlayer(), Move.INVALID);
+            return;
+        }
+
+        //move is valid!
+
+        //add score to player
+        if(getFieldPos(moveX,moveY) != null && !getFieldPos(moveX,moveY).isNaN()){
+            if(currentPlayer.score.isNaN()){
+                currentPlayer.score = getFieldPos(moveX,moveY);
+            }else{
+                currentPlayer.score = currentPlayer.score.add(getFieldPos(moveX,moveY));
+            }
+        }
+
+        // remove the fraction from the field
+        field[posToIndex(moveX,moveY)] = null;
+
+        // move player
+        currentPlayer.x = moveX;
+        currentPlayer.y = moveY;
+
+        if(checkWinner()) {
+            // game has ended
+        } else {
+            turn = (turn + 1) % NUM_PLAYERS;
+        }
+    }
+
     public void processInput(Move move) {
         lastEvent = new Event(getCurrentPlayer(), move);
 
         if(move != Move.INVALID) {
 
-            Player currentPlayer = getCurrentPlayer();
-            int moveX = currentPlayer.x;
-            int moveY = currentPlayer.y;
+            int dx = 0;
+            int dy = 0;
 
             switch (move){
                 case DOWN:
-                    moveY++;
+                    dy++;
                     break;
                 case UP:
-                    moveY--;
+                    dy--;
                     break;
                 case LEFT:
-                    moveX--;
+                    dx--;
                     break;
                 case RIGHT:
-                    moveX++;
+                    dx++;
             }
 
-            //check if move is out of bounds
-            if(moveX >= width || moveY >= height || moveX < 0 || moveY < 0){
-                //move is out of bounds
-                lastEvent = new Event(getCurrentPlayer(), Move.INVALID);
-                return;
-            }
+            processInput(dx, dy);
 
-            //check if move is blocked by other player
-            if(getPlayerAt(moveX,moveY) != null){
-                //Move is blocked by other player
-                lastEvent = new Event(getCurrentPlayer(), Move.INVALID);
-                return;
-            }
-
-            //move is valid!
-
-            //add score to player
-            if(getFieldPos(moveX,moveY) != null && !getFieldPos(moveX,moveY).isNaN()){
-                if(currentPlayer.score.isNaN()){
-                    currentPlayer.score = getFieldPos(moveX,moveY);
-                }else{
-                    currentPlayer.score = currentPlayer.score.add(getFieldPos(moveX,moveY));
-                }
-            }
-
-            // remove the fraction from the field
-            field[posToIndex(moveX,moveY)] = null;
-
-            // move player
-            currentPlayer.x = moveX;
-            currentPlayer.y = moveY;
-
-            if(checkWinner()) {
-                // game has ended
-            } else {
-                turn = (turn + 1) % NUM_PLAYERS;
-            }
         }
 
     }
