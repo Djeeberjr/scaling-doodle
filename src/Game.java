@@ -18,11 +18,12 @@ public class Game {
     private Player[] players;
     private Fraction[] field;
     private Fraction fieldSum;
-    private int winner = -1;
+    private int winner = 0;
     private Event lastEvent;
 
     Game(int width, int height) {
 
+        winner = -1;
         do {
             // generate field
             generateField(width, height);
@@ -36,6 +37,7 @@ public class Game {
 
             // make sure there is enough value on the field
         } while(checkWinner() && winner < 0);
+        winner = 0;
     }
 
     public void processInput(int dx, int dy) {

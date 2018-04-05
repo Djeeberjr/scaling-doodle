@@ -12,9 +12,11 @@
 public class Main {
     public static void main(String[] args) {
 
-        String type = "console";
+        String type = "w";
         if(args.length > 0)
             type = args[0].toLowerCase();
+
+
 
         IGame game;
         switch (type.charAt(0)) {
