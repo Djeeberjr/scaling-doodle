@@ -4,14 +4,17 @@ import java.awt.event.*;
 
 /**
  * Das Spiel als Fenster anzeigen
+ * @author Niklas Kapelle
+ * @author Henri Bußmann
+ * @version 1.0 05.04.2018
  */
+
 public class WindowGame extends JFrame implements ActionListener, KeyListener, IGame, IOutput {
 
     private Game game;
     private IOutput output;
     private JButton buttons[];
     private JLabel scoresDisplay;
-
     private ImageIcon playerIcons[];
 
     WindowGame() {
@@ -22,9 +25,9 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
     }
 
     private void updateScore(){
-        this.scoresDisplay.setText("<html><div style='text-align: center;'><u>Scores</u> (Needed: " + Game.WIN_SCORE + ")</div><br>1. Mario: "
+        this.scoresDisplay.setText("<html><div style='text-align: center;'><u>Scores</u> (Needed: " + Game.WIN_SCORE + ")</div><br>Mario: "
                 + String.format("%.2f", game.getPlayer(0).score.doubleValue())
-                +" <br>2. Luigi: "
+                +" <br>Luigi: "
                 + String.format("%.2f", game.getPlayer(1).score.doubleValue())
                 +" </html>");
     }
@@ -47,6 +50,7 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
         setMinimumSize(new Dimension(900,600));
         setLocationRelativeTo(null); // centered
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         createMenuBar();
 
         setFocusable(true);
@@ -75,35 +79,18 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
         scoresArea.setLayout(new GridLayout());
         scoresArea.setPreferredSize(new Dimension(300, 600));
 
-        // create a
+        // create the scores display
         scoresDisplay = new JLabel();
         scoresDisplay.setVerticalAlignment(JLabel.TOP);
         updateScore();
         scoresArea.add(scoresDisplay);
+        generateButtons(gameArea);
 
-        // fill the game area with buttons
-        gameArea.setLayout(new GridLayout(game.getHeight(), game.getWidth()));
-        for(int i = 0; i < game.getWidth()*game.getHeight(); i++) {
-            JButton button = new JButton();
-
-            button.setOpaque(false);
-            //button.setContentAreaFilled(false);
-            //button.setBorderPainted(false);
-            //button.setFocusPainted(false);
-
-
-            button.setActionCommand(""+i);
-            button.addActionListener(this);
-            button.setEnabled(i % 3 == 0); // remove! just for testing // Its now a feature
-            buttons[i] = button;
-            gameArea.add(button);
-        }
 
         // put everything together
         cp.setLayout(new BorderLayout());
         cp.add(gameArea, BorderLayout.CENTER);
         cp.add(scoresArea, BorderLayout.LINE_END);
-
 
 
         // update everything once
@@ -114,7 +101,61 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
         this.draw(game);
         //setVisible(true);
 
+    }
 
+    private void generateButtons(JPanel gameArea) {
+        // fill the game area with buttons
+        gameArea.setLayout(new GridLayout(game.getHeight(), game.getWidth()));
+        for(int i = 0; i < game.getWidth()*game.getHeight(); i++) {
+            JButton button = new JButton();
+
+            button.setOpaque(false);
+
+            button.setActionCommand(""+i);
+            button.addActionListener(this);
+            button.setEnabled(i % 3 == 0); // remove! just for testing // Its now a feature
+            buttons[i] = button;
+            gameArea.add(button);
+        }
+    }
+
+    private void createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenuItem menuItem;
+
+        //Build the first menu.
+        JMenu menu = new JMenu("Game");
+        menu.setMnemonic(KeyEvent.VK_G);
+        menu.getAccessibleContext().setAccessibleDescription("Game");
+        menuBar.add(menu);
+
+        WindowGame self = this;
+        ActionListener listener = e -> {
+            switch (e.getActionCommand()) {
+                case "New":
+                    new WindowGame().runGame();
+                    break;
+                case "Exit":
+                    self.dispose();
+                    break;
+            }
+        };
+
+        // new
+        menuItem = new JMenuItem("New");
+        menuItem.setMnemonic(KeyEvent.VK_N);
+        menuItem.addActionListener(listener);
+        menu.add(menuItem);
+
+        menu.addSeparator();
+
+        // exit
+        menuItem = new JMenuItem("Exit");
+        menuItem.setMnemonic(KeyEvent.VK_E);
+        menuItem.addActionListener(listener);
+        menu.add(menuItem);
+
+        this.setJMenuBar(menuBar);
     }
 
     @Override //ActionListener
@@ -234,18 +275,17 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
 
     }
 
-    @Override
+    @Override //KeyListner
     public void keyTyped(KeyEvent e) {
         //NOP
     }
 
-    @Override
+    @Override //KeyListner
     public void keyPressed(KeyEvent e) {
         //NOP
-
     }
 
-    @Override
+    @Override //KeyListner
     public void keyReleased(KeyEvent e) {
         int keycode = e.getKeyCode();
 
@@ -275,45 +315,6 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
 
         draw(game);
 
-    }
-
-    private void createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenuItem menuItem;
-
-        //Build the first menu.
-        JMenu menu = new JMenu("Game");
-        menu.setMnemonic(KeyEvent.VK_G);
-        menu.getAccessibleContext().setAccessibleDescription("Game");
-        menuBar.add(menu);
-
-        WindowGame self = this;
-        ActionListener listener = e -> {
-            switch (e.getActionCommand()) {
-                case "New":
-                    new WindowGame().runGame();
-                    break;
-                case "Exit":
-                    self.dispose();
-                    break;
-            }
-        };
-
-        // new
-        menuItem = new JMenuItem("New");
-        menuItem.setMnemonic(KeyEvent.VK_N);
-        menuItem.addActionListener(listener);
-        menu.add(menuItem);
-
-        menu.addSeparator();
-
-        // exit
-        menuItem = new JMenuItem("Exit");
-        menuItem.setMnemonic(KeyEvent.VK_E);
-        menuItem.addActionListener(listener);
-        menu.add(menuItem);
-
-        this.setJMenuBar(menuBar);
     }
 
 }
