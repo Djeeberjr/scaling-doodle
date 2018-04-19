@@ -1,6 +1,8 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 /**
  * Das Spiel als Fenster anzeigen
@@ -49,7 +51,7 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
         setSize(900, 600);
         setMinimumSize(new Dimension(900,600));
         setLocationRelativeTo(null); // centered
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         createMenuBar();
 
@@ -138,12 +140,32 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
                 case "Exit":
                     self.dispose();
                     break;
+                case "Save":
+                    saveGame();
+                    break;
+                case "Load":
+                    loadGame();
+                    break;
             }
         };
 
         // new
         menuItem = new JMenuItem("New");
         menuItem.setMnemonic(KeyEvent.VK_N);
+        menuItem.addActionListener(listener);
+        menu.add(menuItem);
+
+
+
+        // Save
+        menuItem = new JMenuItem("Save");
+        menuItem.setMnemonic(KeyEvent.VK_S);
+        menuItem.addActionListener(listener);
+        menu.add(menuItem);
+
+        // Save
+        menuItem = new JMenuItem("Load");
+        menuItem.setMnemonic(KeyEvent.VK_L);
         menuItem.addActionListener(listener);
         menu.add(menuItem);
 
@@ -156,6 +178,53 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
         menu.add(menuItem);
 
         this.setJMenuBar(menuBar);
+    }
+
+    private void saveGame(){
+        JFileChooser c = new JFileChooser();
+
+        int rVal = c.showSaveDialog(this);
+
+        if(rVal == JFileChooser.APPROVE_OPTION){
+            //Save the game
+            FileOutputStream fs;
+            ObjectOutputStream os;
+            try{
+                fs = new FileOutputStream(c.getSelectedFile());
+                os = new ObjectOutputStream(fs);
+                os.writeObject(this.game);
+                os.close();
+            }catch (Exception e){
+                //RIP
+                System.out.println("RIP");
+            }
+
+        }
+    }
+
+
+    private void loadGame(){
+        JFileChooser c = new JFileChooser();
+        c.setFileSelectionMode(JFileChooser.OPEN_DIALOG);
+        int rVal = c.showSaveDialog(this);
+
+        if(rVal == JFileChooser.APPROVE_OPTION) {
+            //Load Game
+            FileInputStream fs;
+            ObjectInputStream is;
+            try{
+                fs = new FileInputStream(c.getSelectedFile());
+                is = new ObjectInputStream(fs);
+                this.game = (Game)is.readObject();
+
+                is.close();
+                draw(game);
+            }catch (Exception e){
+                //RIP
+                //System.out.println(e.getMessage());
+            }
+
+        }
     }
 
     @Override //ActionListener
@@ -213,6 +282,7 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
 //                button.setText("");
             } else {
                 // there is still a fraction here, display it
+                button.setIcon(null);
                 if(field != null) {
                     button.setText(
                             "<html><div style='text-align: center; font: bold \"Noto Sans\" monospace;'>"
@@ -225,7 +295,7 @@ public class WindowGame extends JFrame implements ActionListener, KeyListener, I
                     button.setText("");
                     //Unset the texture
                     button.setDisabledIcon(null);
-                    button.setIcon(null);
+
 
 
                 }

@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.math.BigInteger;
 /**
  * Repräsentiert einen Bruch
@@ -6,7 +7,7 @@ import java.math.BigInteger;
  * @author Henri Bußmann
  * @version 1.2 03.01.2018
  */
-public class Fraction extends Number implements Comparable<Fraction> {
+public class Fraction extends Number implements Comparable<Fraction> , Serializable{
 
     public static final Fraction NaN = new Fraction(0, 0);
     public static final Fraction ZERO = new Fraction(0, 1);

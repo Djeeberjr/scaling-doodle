@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Random;
  * @author Henri Bußmann
  * @version 1.7 09.01.18
  */
-public class Game {
+public class Game  implements Serializable{
     public static final int NUM_PLAYERS = 2;
     public static final int PLAYER_BLACK = 0;
     public static final int PLAYER_WHITE = 1;

@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * Represents a player in the game
  *
@@ -5,7 +7,7 @@
  * @author Henri Bußmann
  * @version 1.1 03.01.18
  */
-public class Player {
+public class Player implements Serializable{
     public int x;
     public int y;
     public Fraction score;
